@@ -2827,3 +2827,4 @@
 .venv/Lib/site-packages/setuptools-56.0.0.dist-info/top_level.txt
 .venv/Lib/site-packages/setuptools-56.0.0.dist-info/WHEEL
 .venv/Scripts/f2py.exe
+__pycache__/LSBSteg.cpython-38.pyc
