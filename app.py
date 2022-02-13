@@ -23,16 +23,30 @@ def upload():
         from LSBSteg import LSBSteg
         import cv2
         #encoding
-        steg = LSBSteg(cv2.imread("image.png"))
+        steg = LSBSteg(cv2.imread("./static/image.png"))
         str1=""
         msg= ListOfMessages[-1]
         str1=msg['MessageText']
+        # str1="This is a secret HADGEHOG!!!"
+        print(str1)
         img_encoded = steg.encode_text(str1)
         cv2.imwrite("stego.png", img_encoded)
         # image.show()
-        return "http://localhost:5000/static/image.jpg", 200
-        # return {"id": 1, "Username": "admin", "Level": "Administrator"}, 200
-    return "http://localhost:5000/static/image.jpg", 200
+        return "http://localhost:5000/static/stego.png", 200
+    return "wrong request", 200
+
+# получение зашифрованного сообщения
+@app.route("/stego")
+def GetStego():
+    from LSBSteg import LSBSteg
+    import cv2
+    #decoding
+    im = cv2.imread("stego.png")
+    steg = LSBSteg(im)
+    str1=""
+    str1=steg.decode_text()
+    print("Text value:",str1)
+    return str1, 200
 
 
 @app.route('/')
