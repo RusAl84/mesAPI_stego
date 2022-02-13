@@ -6,11 +6,40 @@ CORS(app)
 
 ListOfMessages = []
 
+UPLOAD_FOLDER = './upload'
+
+app = Flask(__name__)
+cors = CORS(app)
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    for fname in request.files:
+        f = request.files.get(fname)
+        print(f)
+        # f.save('./upload/%s' % secure_filename(fname))
+        f.save('./static/image.png')
+        from LSBSteg import LSBSteg
+        import cv2
+        #encoding
+        steg = LSBSteg(cv2.imread("image.png"))
+        str1=""
+        msg= ListOfMessages[-1]
+        str1=msg['MessageText']
+        img_encoded = steg.encode_text(str1)
+        cv2.imwrite("stego.png", img_encoded)
+        # image.show()
+        return "http://localhost:5000/static/image.jpg", 200
+        # return {"id": 1, "Username": "admin", "Level": "Administrator"}, 200
+    return "http://localhost:5000/static/image.jpg", 200
+
+
 @app.route('/')
 def dafault_route():
     return 'Messenger Flask server is running! ' \
             f'<br> Count of Messages {len(ListOfMessages)}'\
-           '<br> <a href="/status">Check status</a>'
+            '<br> <a href="/status">Check status</a>'
 
 # отправка сообщений
 @app.route("/mes", methods=['POST'])
